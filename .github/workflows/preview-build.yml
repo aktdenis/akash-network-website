@@ -1,7 +1,9 @@
-# Builds a PR preview image for the upstream akash-network/website repo and
-# pushes it to ghcr.io/<owner>/website-preview:pr-<N>. Triggered on demand by
-# Broadway via the GitHub API (workflow_dispatch). Uses plain shell, no
-# marketplace actions.
+# Builds a PR preview of akash-network/website and uploads the static output
+# as a GitHub Actions artifact. Broadway downloads the artifact and serves
+# the files directly from its own disk — no Docker image or Akash container
+# per PR is needed any more.
+#
+# Triggered on demand by Broadway via workflow_dispatch.
 
 name: Build PR preview
 
@@ -15,15 +17,12 @@ on:
 
 permissions:
   contents: read
-  packages: write
+  actions: write   # needed to upload artifacts
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Get builder files (Dockerfile, nginx.conf)
-        run: git clone --depth 1 https://github.com/${{ github.repository }}.git builder
-
       - name: Fetch upstream PR code
         run: |
           mkdir site && cd site
@@ -31,20 +30,15 @@ jobs:
           git remote add origin https://github.com/akash-network/website.git
           git fetch -q --depth 1 origin "pull/${{ inputs.pr }}/head"
           git checkout -q FETCH_HEAD
-          cd ..
-          cp builder/.preview/Dockerfile builder/.preview/nginx.conf site/
 
-      - name: Log in to ghcr.io
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Build Astro site
+        run: cd site && npm ci && npm run build
 
-      - name: Build and push preview image
-        run: |
-          IMAGE="ghcr.io/${{ github.repository_owner }}/website-preview"
-          # Tag with run ID so each build gets a unique, uncached image ref.
-          # Broadway reads run_id and constructs this tag for the Akash SDL,
-          # guaranteeing providers pull fresh rather than reusing a stale layer.
-          TAG="pr-${{ inputs.pr }}-${{ github.run_id }}"
-          docker build -t "$IMAGE:$TAG" -t "$IMAGE:pr-${{ inputs.pr }}" site
-          docker push "$IMAGE:$TAG"
-          docker push "$IMAGE:pr-${{ inputs.pr }}"
-          echo "Pushed $IMAGE:$TAG"
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # Name includes run_id so Broadway can find it unambiguously.
+          name: preview-${{ inputs.pr }}-${{ github.run_id }}
+          path: site/dist/
+          retention-days: 7
+          if-no-files-found: error
