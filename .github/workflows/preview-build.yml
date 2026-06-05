@@ -1,7 +1,6 @@
-# Builds a PR preview of akash-network/website and uploads the static output
-# as a GitHub Actions artifact. Broadway downloads the artifact and serves
-# the files directly from its own disk — no Docker image or Akash container
-# per PR is needed any more.
+# Builds a preview of akash-network/website (from a PR) or
+# aktdenis/akash-network-website (from a branch) and uploads the static output
+# as a GitHub Actions artifact. Broadway downloads it and serves it directly.
 #
 # Triggered on demand by Broadway via workflow_dispatch.
 
@@ -11,25 +10,46 @@ on:
   workflow_dispatch:
     inputs:
       pr:
-        description: "akash-network/website PR number to build"
-        required: true
+        description: "upstream akash-network/website PR number (leave empty for branch deploy)"
+        required: false
+        type: string
+      ref:
+        description: "fork branch ref for branch deploys (leave empty for PR deploy)"
+        required: false
+        type: string
+      repo:
+        description: "fork repo for branch deploys, e.g. aktdenis/akash-network-website"
+        required: false
         type: string
 
 permissions:
   contents: read
-  actions: write   # needed to upload artifacts
+  actions: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch upstream PR code
+      - name: Fetch code
         run: |
           mkdir site && cd site
           git init -q
-          git remote add origin https://github.com/akash-network/website.git
-          git fetch -q --depth 1 origin "pull/${{ inputs.pr }}/head"
-          git checkout -q FETCH_HEAD
+
+          if [ -n "${{ inputs.pr }}" ]; then
+            # PR deploy: fetch from upstream akash-network/website
+            git remote add origin https://github.com/akash-network/website.git
+            git fetch -q --depth 1 origin "pull/${{ inputs.pr }}/head"
+            git checkout -q FETCH_HEAD
+            echo "PREVIEW_SLUG=pr-${{ inputs.pr }}" >> $GITHUB_ENV
+          else
+            # Branch deploy: fetch from the fork at the given ref
+            git remote add origin https://github.com/${{ inputs.repo }}.git
+            git fetch -q --depth 1 origin "${{ inputs.ref }}"
+            git checkout -q FETCH_HEAD
+            # Slugify the branch name the same way Broadway does
+            SLUG=$(echo "${{ inputs.ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/^-\|-$//g' | cut -c1-50)
+            echo "PREVIEW_SLUG=branch-${SLUG}" >> $GITHUB_ENV
+          fi
 
       - name: Build Astro site
         run: cd site && npm ci && npm run build
@@ -37,8 +57,7 @@ jobs:
       - name: Upload preview artifact
         uses: actions/upload-artifact@v4
         with:
-          # Name includes run_id so Broadway can find it unambiguously.
-          name: preview-${{ inputs.pr }}-${{ github.run_id }}
+          name: preview-${{ env.PREVIEW_SLUG }}-${{ github.run_id }}
           path: site/dist/
           retention-days: 7
           if-no-files-found: error
