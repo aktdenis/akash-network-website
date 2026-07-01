@@ -1,0 +1,77 @@
+---
+import { acc2026 } from "./acc-2026";
+---
+
+<section class="bg-black py-24 text-center">
+
+  <!-- Auto-scrolling photo strip -->
+  <div class="acc-reveal acc26-scroll-wrap overflow-hidden mb-20" aria-hidden="true" data-delay="1">
+    <div class="acc26-scroll-strip inline-flex gap-3">
+      {
+        [...Array.from({ length: 2 }, (_) =>
+          [1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+            <img
+              src={`/images/accelerate-26/gallery/${String(n).padStart(2, '0')}.webp`}
+              alt=""
+              class="h-[320px] w-auto shrink-0 rounded-xl"
+              loading="lazy"
+            />
+          ))
+        ).flat()]
+      }
+    </div>
+  </div>
+
+  <div class="container mx-auto max-w-2xl">
+    <h2
+      class="acc-reveal mb-6 text-4xl font-medium !leading-[1.15] tracking-[-0.04em] text-foreground md:text-5xl"
+    >
+      Austin ignited it.<br />New York amplified it.<br />
+      San Francisco will define it.
+    </h2>
+    <p class="acc-reveal mb-9 text-base leading-relaxed text-para" data-delay="1">
+      10.05.26 · The Conservatory, SF.<br />Early Bird pricing is limited to the first 1,000 attendees. Secure your access.
+    </p>
+    <div class="acc-reveal flex flex-wrap justify-center gap-3" data-delay="2">
+      <a
+        href={acc2026.register}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 rounded-lg bg-foreground px-7 py-3 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
+      >
+        Get Early Bird Pass ($99)
+        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+        </svg>
+      </a>
+      <a
+        href={acc2026.calendarLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 rounded-lg border border-border/40 bg-transparent px-7 py-3 text-sm font-medium text-foreground/60 transition-colors hover:border-border/70 hover:text-foreground"
+      >
+        Join Virtually — Add to Calendar
+        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  const wrap = document.querySelector(".acc26-scroll-wrap") as HTMLElement | null;
+  const strip = document.querySelector(".acc26-scroll-strip") as HTMLElement | null;
+  if (wrap && strip) {
+    let pos = 0;
+    const tick = () => {
+      pos += 0.5;
+      const half = strip.scrollWidth / 2;
+      if (pos >= half) pos -= half;
+      wrap.scrollLeft = pos;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+</script>

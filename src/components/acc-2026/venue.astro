@@ -1,0 +1,52 @@
+---
+---
+
+<section class="py-20 bg-[#0D0D0E]" id="venue">
+  <div class="container">
+    <div class="acc-reveal relative overflow-hidden rounded-2xl text-center" style="min-height: 520px;">
+      <!-- Video background -->
+      <video
+        class="absolute inset-0 h-full w-full object-cover"
+        src="/images/accelerate-26/acc-sf-bg.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+        style="opacity: 0.45;"
+      />
+      <!-- Dark overlay -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/65 via-black/50 to-black/70"></div>
+
+      <div class="relative z-10 flex flex-col items-center justify-center px-8 py-28">
+        <h2 class="mb-5 text-3xl font-semibold !leading-snug tracking-tight text-white md:text-5xl">
+          The Conservatory at One Sansome
+        </h2>
+        <p class="mb-10 max-w-xl leading-[1.75] text-white/70">
+          16,000 sq ft of glass-domed Beaux-Arts landmark in SF's Financial District,
+          transformed into optimized session tracks, dedicated breakout rooms, and
+          interactive hardware exhibition floors.
+        </p>
+
+        <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-white/40">
+          Getting There
+        </p>
+        <div class="flex flex-wrap justify-center gap-2">
+          {
+            [
+              { label: "SFO", text: "25 min via BART" },
+              { label: "OAK", text: "35 min via BART" },
+              { label: "BART", text: "Montgomery St. — 1 block" },
+              { label: "Parking", text: "Multiple garages nearby" },
+            ].map((r) => (
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-4 py-1.5 text-sm text-white/65 backdrop-blur-sm">
+                <span class="font-semibold text-white/85">{r.label}</span>
+                <span class="text-white/30">·</span>
+                {r.text}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,115 @@
+---
+import { acc2026 } from "./acc-2026";
+
+const links = [
+  { label: "Why Attend", href: "#why-attend" },
+  { label: "Tickets", href: "#tickets" },
+  { label: "Speakers", href: "#speakers" },
+  { label: "Who It's For", href: "#who-its-for" },
+  { label: "Venue", href: "#venue" },
+  { label: "FAQ", href: "#faq" },
+];
+---
+
+<div
+  data-acc-subnav
+  class="sticky z-[30] border-b border-white/10 bg-[#000000]"
+  style="top: 56px; transition: top 0.3s ease;"
+>
+  <div class="container">
+    <div class="flex items-center justify-between overflow-x-auto py-3" data-subnav-scroll>
+      <div class="flex items-center -mx-3">
+        {links.map((l) => (
+          <a
+            href={l.href}
+            data-acc-nav
+            class="whitespace-nowrap px-3 py-1.5 text-[13.4px] font-normal transition-colors text-zinc-400 hover:text-white"
+          >
+            {l.label}
+          </a>
+        ))}
+      </div>
+      <a
+        href={acc2026.register}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-foreground px-3 py-1.5 text-[13.4px] font-semibold text-background transition-colors hover:opacity-90"
+      >
+        Register
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
+          <path d="M7 17L17 7" />
+          <path d="M7 7h10v10" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  [data-acc-nav][data-active] {
+    color: white;
+  }
+</style>
+
+<script>
+  function scrollActiveIntoView() {
+    const scroll = document.querySelector<HTMLElement>("[data-subnav-scroll]");
+    if (!scroll) return;
+    const active = scroll.querySelector<HTMLElement>("[data-active]");
+    if (active) {
+      active.scrollIntoView({ behavior: "instant", inline: "nearest", block: "nearest" });
+    }
+  }
+
+  function setupSubNav() {
+    const header = document.getElementById("main-header");
+    const subNav = document.querySelector<HTMLElement>("[data-acc-subnav]");
+    if (!header || !subNav) return;
+
+    const updateTop = () => {
+      const headerHeight = header.getBoundingClientRect().height || 56;
+      subNav.style.top =
+        header.style.transform === "translateY(-100%)" ? "0px" : `${headerHeight}px`;
+    };
+
+    const observer = new MutationObserver(updateTop);
+    observer.observe(header, { attributes: true, attributeFilter: ["style"] });
+    updateTop();
+
+    document.addEventListener("astro:before-swap", () => observer.disconnect(), {
+      once: true,
+    });
+  }
+
+  function setupSectionObserver() {
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>("[data-acc-nav]");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            navLinks.forEach((link) => {
+              if (link.getAttribute("href") === `#${entry.target.id}`) {
+                link.setAttribute("data-active", "");
+              } else {
+                link.removeAttribute("data-active");
+              }
+            });
+            break;
+          }
+        }
+      },
+      { rootMargin: "-20% 0px -70% 0px", threshold: 0 },
+    );
+
+    ["why-attend", "tickets", "speakers", "who-its-for", "venue", "faq"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    scrollActiveIntoView();
+    setupSubNav();
+  }
+
+  document.addEventListener("astro:page-load", setupSectionObserver);
+</script>

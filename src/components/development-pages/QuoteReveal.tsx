@@ -3,25 +3,25 @@ import { useEffect, useRef, useState } from "react";
 
 interface Props {
   lines: string[];
-  author: string;
+  author?: string;
   authorDetails?: string[];
   href?: string;
   outlined?: boolean;
   preRevealChars?: number;
   startProgress?: number;
+  fontSize?: string;
 }
 
-const blockStyle: React.CSSProperties = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 500,
-  fontSize: "28px",
-  lineHeight: "33.6px",
-  letterSpacing: "-1.1px",
-  width: "100%",
-  textAlign: "center",
-};
-
-export default function QuoteReveal({ lines, author, authorDetails, href, outlined, preRevealChars, startProgress = 0 }: Props) {
+export default function QuoteReveal({ lines, author, authorDetails, href, outlined, preRevealChars, startProgress = 0, fontSize = "28px" }: Props) {
+  const blockStyle: React.CSSProperties = {
+    fontFamily: "Inter, sans-serif",
+    fontWeight: 500,
+    fontSize,
+    lineHeight: 1.2,
+    letterSpacing: "-1.1px",
+    width: "100%",
+    textAlign: "center",
+  };
   const [progress, setProgress] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -111,7 +111,7 @@ export default function QuoteReveal({ lines, author, authorDetails, href, outlin
           {renderBlockquote()}
         </a>
       ) : renderBlockquote()}
-      {renderAuthor()}
+      {author && renderAuthor()}
     </div>
   );
 }

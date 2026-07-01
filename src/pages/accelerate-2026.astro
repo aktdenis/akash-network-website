@@ -1,0 +1,42 @@
+---
+import Layout from "@/layouts/layout.astro";
+
+import SecondaryNav from "@/components/acc-2026/SecondaryNav.astro";
+import Head from "@/components/acc-2026/head.astro";
+import WhyAttend from "@/components/acc-2026/why-attend.astro";
+import Highlights from "@/components/acc-2026/highlights.astro";
+import Tickets from "@/components/acc-2026/Tickets";
+import Speakers from "@/components/acc-2026/speakers.astro";
+import WhoItsFor from "@/components/acc-2026/who-its-for.astro";
+import SponsorSpeak from "@/components/acc-2026/sponsor-speak.astro";
+import Manifesto from "@/components/acc-2026/manifesto.astro";
+import FAQ from "@/components/acc-2026/FAQ";
+import CTA from "@/components/acc-2026/cta.astro";
+import Footer from "@/components/footer/footer.astro";
+import Reveal from "@/components/acc-2026/reveal.astro";
+---
+
+<Layout
+  title="Akash Accelerate 2026 — The New Architecture of Mind"
+  description="One high-signal day in SF dedicated to high-performance compute, open-source AI, and the raw silicon infrastructure scaling the next generation of human intellect. Oct 5, 2026 · The Conservatory at One Sansome, San Francisco."
+  image="/meta-images/acc-2026.jpg"
+  classname="dark !bg-[#000000]"
+  headerClassName="!bg-[#000000] top-0 sticky z-[40] pt-4 pb-0 md:pb-2.5 px-4"
+  hideDarkToggle
+>
+  <Reveal />
+  <SecondaryNav />
+  <Head />
+  <WhyAttend />
+  <Highlights />
+  <Tickets client:load />
+  <Speakers />
+  <WhoItsFor />
+  <Manifesto />
+  <SponsorSpeak />
+  <FAQ client:load />
+  <CTA />
+  <div class="bg-background">
+    <Footer hideDarkToggle overrideClassName="container" />
+  </div>
+</Layout>

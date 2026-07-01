@@ -55,13 +55,11 @@ const CARDS: Card[] = [
 
 const CONTAINER_PADDING = 'max(1.5rem, calc((100vw - 1280px) / 2 + 1.5rem))'
 
-const SCROLL_TARGETS = [4, 5]
 
 export function InfraCarousel() {
   const scrollRef  = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const [step, setStep] = useState(0)
-  const [atStart, setAtStart] = useState(true)
-  const [atEnd, setAtEnd] = useState(false)
   const [isMobileView, setIsMobileView] = useState(
     () => typeof window !== 'undefined' && window.innerWidth < 1024
   )
@@ -75,41 +73,29 @@ export function InfraCarousel() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Sync dot and atStart/atEnd state with actual scroll position
+  // Sync mobile dots with actual scroll position
   useEffect(() => {
+    if (!isMobileView) return
     const el = scrollRef.current
     if (!el) return
     const onScroll = () => {
-      const maxScroll = el.scrollWidth - el.clientWidth
-      const isAtStart = el.scrollLeft < 5
-      const isAtEnd = el.scrollLeft >= maxScroll - 5
-      setAtStart(isAtStart)
-      setAtEnd(isAtEnd)
-      if (isMobileView) {
-        const children = Array.from(el.children) as HTMLElement[]
-        const containerMid = el.getBoundingClientRect().left + el.offsetWidth / 2
-        let closest = 0
-        let minDist = Infinity
-        children.forEach((child, i) => {
-          const dist = Math.abs(child.getBoundingClientRect().left + child.offsetWidth / 2 - containerMid)
-          if (dist < minDist) { minDist = dist; closest = i }
-        })
-        setStep(closest)
-      } else {
-        if (isAtStart) setStep(0)
-        else if (isAtEnd) setStep(SCROLL_TARGETS.length)
-        else setStep(1)
-      }
+      const children = Array.from(el.children) as HTMLElement[]
+      const containerMid = el.getBoundingClientRect().left + el.offsetWidth / 2
+      let closest = 0
+      let minDist = Infinity
+      children.forEach((child, i) => {
+        const dist = Math.abs(child.getBoundingClientRect().left + child.offsetWidth / 2 - containerMid)
+        if (dist < minDist) { minDist = dist; closest = i }
+      })
+      setStep(closest)
     }
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => el.removeEventListener('scroll', onScroll)
   }, [isMobileView])
 
-  // ── Sticky scroll-driven carousel (desktop only) ─────────────────────────
-  // The section is position:sticky (lg:sticky lg:top-4 in the Astro wrapper).
-  // We set the outer div tall enough for the section to stay pinned for the full
-  // carousel traversal, then map scroll progress through that extra height to scrollLeft.
-
+  // ── Sticky scroll-driven carousel (desktop only) ────────────────────────
+  // Outer div gets extra height so the sticky section stays pinned while the
+  // full carousel width is traversed.
   useEffect(() => {
     if (isMobileView) return
     const outer = document.getElementById('infra-scroll-outer')
@@ -118,7 +104,8 @@ export function InfraCarousel() {
     if (!outer || !inner || !el) return
     const maxScroll = el.scrollWidth - el.clientWidth
     if (maxScroll <= 0) return
-    outer.style.height = `${inner.offsetHeight + Math.round(maxScroll / 2)}px`
+    const scrollSpace = Math.round(maxScroll * 1.4)
+    outer.style.height = `${window.innerHeight + scrollSpace}px`
     return () => { outer.style.height = '' }
   }, [isMobileView])
 
@@ -129,10 +116,10 @@ export function InfraCarousel() {
     if (!outer || !el) return
     const maxScroll = el.scrollWidth - el.clientWidth
     if (maxScroll <= 0) return
-    const scrollSpace = Math.round(maxScroll / 2)
+    const scrollSpace = Math.round(maxScroll * 1.4)
     const onPageScroll = () => {
       const outerTop = outer.getBoundingClientRect().top
-      const progress = Math.max(0, Math.min(1, (16 - outerTop) / scrollSpace))
+      const progress = Math.max(0, Math.min(1, -outerTop / scrollSpace))
       el.scrollLeft = progress * maxScroll
     }
     window.addEventListener('scroll', onPageScroll, { passive: true })
@@ -169,23 +156,25 @@ export function InfraCarousel() {
   }
 
   return (
-    <div className="w-full">
+    <div ref={wrapperRef} className="w-full">
       {/* Header — contained */}
-      <div className="mb-10" style={{ paddingLeft: CONTAINER_PADDING, paddingRight: CONTAINER_PADDING, maxWidth: 'calc(1280px + 2 * max(1.5rem, (100vw - 1280px) / 2 + 1.5rem))', marginLeft: 'auto', marginRight: 'auto' }}>
-        <h2 className="text-[28px] font-semibold leading-tight text-foreground md:text-[40px]">
-          Supercloud for AI
-        </h2>
-        <p className="mt-3 max-w-lg text-sm text-para">
-          Stop overpaying for gated compute. Deploy on a global marketplace of high-density GPUs
-          to maximize your engineering runway.
-        </p>
+      <div className="mb-10 lg:mb-6" style={{ paddingLeft: CONTAINER_PADDING, paddingRight: CONTAINER_PADDING }}>
+        <div>
+          <h2 className="text-[28px] font-semibold leading-tight text-foreground md:text-[40px]">
+            Supercloud for AI
+          </h2>
+          <p className="mt-3 max-w-lg text-sm text-para">
+            Stop overpaying for gated compute. Deploy on a global marketplace of high-density GPUs
+            to maximize your engineering runway.
+          </p>
+        </div>
       </div>
 
       {/* Carousel — full bleed, left-padded to container edge */}
       <div
         ref={scrollRef}
         className="flex gap-6 lg:gap-8 pb-1 overflow-x-auto cursor-grab active:cursor-grabbing [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-        style={{ paddingLeft: CONTAINER_PADDING, paddingRight: CONTAINER_PADDING }}
+        style={{ paddingLeft: CONTAINER_PADDING }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -228,9 +217,11 @@ export function InfraCarousel() {
             </p>
           </div>
         ))}
+        {/* Trailing spacer — right padding equivalent (Chrome ignores paddingRight at max scroll) */}
+        <div className="shrink-0" aria-hidden="true" style={{ width: CONTAINER_PADDING }} />
       </div>
 
-      {/* Dots — mobile only */}
+      {/* Dots — mobile only, below carousel */}
       <div className="mt-8 flex justify-center lg:hidden" style={{ paddingLeft: CONTAINER_PADDING, paddingRight: CONTAINER_PADDING }}>
         <div className="flex items-center gap-2">
           {CARDS.map((_, i) => (
@@ -246,6 +237,7 @@ export function InfraCarousel() {
           ))}
         </div>
       </div>
+
     </div>
   )
 }

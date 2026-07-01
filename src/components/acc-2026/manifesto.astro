@@ -1,0 +1,44 @@
+---
+import QuoteReveal from "@/components/development-pages/QuoteReveal";
+import { ManifestoCards } from "./ManifestoCards";
+
+const quoteLines = [
+  `A century ago, human engineering mastered steel to raise the physical skyline. Today, we master compute to forge the architecture of the human mind. As intelligence evolves into networks of autonomous agents, human potential requires unrestricted power. Akash is the open Supercloud — the unyielding bedrock giving creators direct, unthrottled access to raw metal.`,
+];
+---
+
+<section class="bg-[#0D0D0E]">
+
+  <!-- Display heading -->
+  <div class="container pt-24 md:pt-32 pb-10 md:pb-14 text-center">
+    <h2
+      class="acc-reveal font-instrument leading-[0.85] tracking-tight text-foreground"
+      style="font-size: clamp(4rem, 16vw, 16rem);"
+    >
+      AI — Deco
+    </h2>
+    <p
+      class="acc-reveal mt-6 font-sans font-medium text-foreground"
+      style="font-size: clamp(1.5rem, 3vw, 2.5rem); letter-spacing: -0.03em; line-height: 1.2;"
+      data-delay="1"
+    >
+      The Machine Age Meets the Autonomous Frontier.
+    </p>
+  </div>
+
+  <!-- 8-card cascade grid -->
+  <div class="acc-reveal container pb-20 md:pb-28" data-delay="2">
+    <ManifestoCards client:visible />
+  </div>
+
+  <!-- Quote reveal -->
+  <div class="container py-12 md:py-16">
+    <QuoteReveal
+      client:load
+      lines={quoteLines}
+      preRevealChars={0}
+      fontSize="40px"
+    />
+  </div>
+
+</section>

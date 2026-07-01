@@ -1,0 +1,109 @@
+---
+import { acc2026 } from "./acc-2026";
+---
+
+<section id="venue" class="bg-[#0D0D0E] py-20">
+  <div class="container">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+      <!-- Sponsor card -->
+      <div class="acc-reveal flex flex-col justify-between rounded-xl bg-[#060605] p-8 gap-10" data-delay="1">
+        <div>
+          <span class="mb-6 inline-flex items-center rounded-full border border-border/40 px-3 py-1 text-xs font-medium text-foreground/50">
+            Sponsor Accelerate
+          </span>
+          <p class="text-xl font-light leading-snug text-foreground md:text-2xl">
+            Put your brand in front of 1,000+ builders and investors. Tiered packages from workshop tracks to VIP dinner naming rights.
+          </p>
+        </div>
+        <a
+          href={acc2026.sponsorship}
+          target="_blank"
+          class="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border/50 bg-transparent px-5 py-2.5 text-sm font-medium text-foreground/60 transition-colors hover:border-border hover:text-foreground"
+        >
+          View Sponsorship Tiers
+          <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Speak card -->
+      <div class="acc-reveal flex flex-col justify-between rounded-xl bg-[#060605] p-8 gap-10" data-delay="2">
+        <div>
+          <span class="mb-6 inline-flex items-center rounded-full border border-border/40 px-3 py-1 text-xs font-medium text-foreground/50">
+            Speak at Accelerate
+          </span>
+          <p class="text-xl font-light leading-snug text-foreground md:text-2xl">
+            Technical talks, product case studies, and bold visions. Not sales pitches. Applications close {acc2026.speakerDeadline}.
+          </p>
+        </div>
+        <a
+          href={acc2026.applyToSpeak}
+          target="_blank"
+          class="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border/50 bg-transparent px-5 py-2.5 text-sm font-medium text-foreground/60 transition-colors hover:border-border hover:text-foreground"
+        >
+          Apply to Speak
+          <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Venue card — full width, same gap as cards above -->
+      <div class="acc-reveal col-span-1 sm:col-span-2 relative overflow-hidden rounded-2xl text-center" style="min-height: 580px;" data-delay="3">
+        <video
+          class="absolute inset-0 h-full w-full object-cover"
+          src="/images/accelerate-26/acc-sf-bg.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+          style="opacity: 0.45;"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/65 via-black/50 to-black/70"></div>
+
+        <div class="absolute inset-0 z-10 flex flex-col items-center justify-center px-8">
+          <h2 class="mb-5 text-3xl font-semibold !leading-snug tracking-tight text-white md:text-5xl">
+            The Conservatory at One Sansome
+          </h2>
+          <p class="mb-10 max-w-xl leading-[1.75] text-white/70">
+            16,000 sq ft of glass-domed Beaux-Arts landmark in SF's Financial District,
+            transformed into optimized session tracks, dedicated breakout rooms, and
+            interactive hardware exhibition floors.
+          </p>
+
+          <div class="flex flex-wrap justify-center gap-2">
+            {
+              [
+                { label: "SFO", text: "25 min via BART" },
+                { label: "OAK", text: "35 min via BART" },
+                { label: "BART", text: "Montgomery St. — 1 block" },
+                { label: "Parking", text: "Multiple garages nearby" },
+              ].map((r) => (
+                <span class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-4 py-1.5 text-sm text-white/65 backdrop-blur-sm">
+                  <span class="font-semibold text-white/85">{r.label}</span>
+                  <span class="text-white/30">·</span>
+                  {r.text}
+                </span>
+              ))
+            }
+          </div>
+
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=The+Conservatory+at+One+Sansome,+1+Sansome+St,+San+Francisco,+CA+94104"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-6 inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-black/30 px-5 py-2.5 text-sm font-medium text-white/70 backdrop-blur-sm transition-colors hover:border-white/40 hover:text-white"
+          >
+            View on Map
+            <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
