@@ -3,11 +3,10 @@ import { acc2026 } from "./acc-2026";
 
 const links = [
   { label: "Why Attend", href: "#why-attend" },
-  { label: "Tickets", href: "#tickets" },
   { label: "Speakers", href: "#speakers" },
+  { label: "Tickets", href: "#tickets" },
   { label: "Who It's For", href: "#who-its-for" },
-  { label: "Venue", href: "#venue" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Become a Sponsor", href: "#venue" },
 ];
 ---
 
@@ -35,7 +34,7 @@ const links = [
         rel="noopener noreferrer"
         class="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-foreground px-3 py-1.5 text-[13.4px] font-semibold text-background transition-colors hover:opacity-90"
       >
-        Register
+        Get Early Bird Pass ($99)
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
           <path d="M7 17L17 7" />
           <path d="M7 7h10v10" />
@@ -102,7 +101,7 @@ const links = [
       { rootMargin: "-20% 0px -70% 0px", threshold: 0 },
     );
 
-    ["why-attend", "tickets", "speakers", "who-its-for", "venue", "faq"].forEach((id) => {
+    ["why-attend", "speakers", "tickets", "who-its-for", "venue"].forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });

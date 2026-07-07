@@ -7,6 +7,7 @@ import WhyAttend from "@/components/acc-2026/why-attend.astro";
 import Highlights from "@/components/acc-2026/highlights.astro";
 import Tickets from "@/components/acc-2026/Tickets";
 import Speakers from "@/components/acc-2026/speakers.astro";
+import FeaturedGuest from "@/components/acc-2026/featured-guest.astro";
 import WhoItsFor from "@/components/acc-2026/who-its-for.astro";
 import SponsorSpeak from "@/components/acc-2026/sponsor-speak.astro";
 import Manifesto from "@/components/acc-2026/manifesto.astro";
@@ -29,8 +30,9 @@ import Reveal from "@/components/acc-2026/reveal.astro";
   <Head />
   <WhyAttend />
   <Highlights />
-  <Tickets client:load />
   <Speakers />
+  <FeaturedGuest />
+  <Tickets client:load />
   <WhoItsFor />
   <Manifesto />
   <SponsorSpeak />
