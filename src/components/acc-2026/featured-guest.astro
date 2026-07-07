@@ -7,8 +7,10 @@ import { acc2026 } from "./acc-2026";
     <div class="acc-reveal grid grid-cols-1 items-center gap-10 md:grid-cols-2" data-delay="1">
 
       <!-- Photo -->
-      <div class="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#111]">
-        <img src="/images/accelerate-26/big-tech-podcast.webp" alt="Big Technology Podcast" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <div class="relative z-0 aspect-square w-full cursor-default transition-transform duration-500 ease-out hover:z-10 hover:scale-[1.04]">
+        <div class="absolute inset-0 overflow-hidden rounded-2xl bg-[#111]">
+          <img src="/images/accelerate-26/big-tech-podcast.webp" alt="Big Technology Podcast" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+        </div>
       </div>
 
       <!-- Text -->
@@ -20,7 +22,7 @@ import { acc2026 } from "./acc-2026";
           Big Technology takes the stage.
         </h2>
         <p class="max-w-md text-base leading-relaxed text-para">
-          Alex Kantrowitz — journalist, author, and host of the Big Technology Podcast — joins Accelerate for a live recording. Expect an unfiltered conversation on AI power concentration, open infrastructure as a counterforce, and what the next chapter of the internet actually looks like.
+          Alex Kantrowitz covers the companies shaping the internet and the ones trying to change who runs it. He joins Accelerate for a live taping of the Big Technology Podcast. The conversation: compute ownership, open infrastructure, and what's actually at stake for builders.
         </p>
         <a
           href={acc2026.register}

@@ -166,17 +166,6 @@ export function SpeakersCarousel() {
             and infrastructure. Here's who's taken the stage. Many are coming back.
           </p>
         </div>
-        <a
-          href={acc2026.applyToSpeak}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="shrink-0 inline-flex w-fit items-center gap-1.5 rounded-lg border border-border/50 bg-transparent px-5 py-2.5 text-sm font-medium text-foreground/60 transition-colors hover:border-border hover:text-foreground"
-        >
-          Apply to Speak
-          <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-          </svg>
-        </a>
       </div>
 
       {/* Arrow buttons */}
@@ -252,6 +241,27 @@ export function SpeakersCarousel() {
           </div>
         ))}
         <div className="shrink-0" aria-hidden="true" style={{ width: CONTAINER_PADDING }} />
+      </div>
+
+      {/* Apply to Speak CTA */}
+      <div
+        className="mt-12 flex flex-col items-center gap-4 text-center"
+        style={{ paddingLeft: CONTAINER_PADDING, paddingRight: CONTAINER_PADDING }}
+      >
+        <p className="max-w-sm text-sm leading-relaxed text-para">
+          Got something worth saying? We're open to technical talks, product case studies, and bold visions. No sales pitches.
+        </p>
+        <a
+          href={acc2026.applyToSpeak}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-transparent px-5 py-2.5 text-sm font-medium text-foreground/60 transition-colors hover:border-border hover:text-foreground"
+        >
+          Apply to Speak
+          <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+          </svg>
+        </a>
       </div>
     </div>
   )
