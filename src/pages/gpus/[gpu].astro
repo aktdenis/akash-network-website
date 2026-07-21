@@ -1,0 +1,348 @@
+---
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { ChevronRight, Check } from "lucide-react";
+
+import { GpuFaq } from "@/components/gpu-detail/GpuFaq";
+import { GpuCodeBlock } from "@/components/gpu-detail/GpuCodeBlock";
+import TopMargin from "@/components/ui/top-margin.astro";
+import Layout from "@/layouts/layout.astro";
+import { gpuData } from "@/lib/gpu-data";
+
+export async function getStaticPaths() {
+  return Object.keys(gpuData).map((slug) => ({ params: { gpu: slug } }));
+}
+
+const { gpu } = Astro.params;
+const data = gpuData[gpu!];
+---
+
+<Layout
+  title={`Rent ${data.name} on Akash — GPU Pricing & Deploy Guide`}
+  description={`Rent ${data.name} on Akash starting at ${data.startingPrice}. No long-term contracts, no platform markup. Pay-as-you-go GPU compute.`}
+>
+  <TopMargin>
+    <div class="space-y-20 pb-28 md:space-y-28">
+
+      <!-- ─── Hero ─────────────────────────────────────────────────── -->
+      <section class="space-y-8 pt-4">
+
+        <!-- Breadcrumb -->
+        <nav class="text-sm text-para">
+          <a href="/pricing/gpus" class="transition-colors hover:text-foreground">GPU Pricing</a>
+          <span class="mx-2 opacity-40">/</span>
+          <span class="text-foreground">{data.name}</span>
+        </nav>
+
+        <div class="space-y-5">
+          <h1 class="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-foreground md:text-5xl">
+            {data.name}
+          </h1>
+
+          <!-- Spec pills -->
+          <div class="flex flex-wrap gap-2">
+            {
+              data.specPills.map((pill) => (
+                <span class="rounded-full border border-border bg-background2 px-3 py-1 text-xs font-medium text-foreground">
+                  {pill}
+                </span>
+              ))
+            }
+          </div>
+
+          <p class="max-w-xl text-base font-normal text-para">{data.subtitle}</p>
+          <p class="max-w-3xl text-base font-normal leading-relaxed text-para">
+            Renting an NVIDIA RTX 5090 on Akash starts at $0.71/hr, sourced live from the Akash decentralized marketplace as of Jul 20, 2026. Competing providers charge $0.99/hr (RunPod Secure Cloud, verified July 2025); Vast.ai and Lambda Labs RTX 5090 availability requires manual verification. The RTX 5090 is Akash's best single-GPU option for inference of 14B–30B parameter models in FP16 — including Qwen2.5-14B and Llama 3.3 70B with 4-bit quantization — and for LoRA fine-tuning on consumer datasets. At 32 GB GDDR7 with 1,792 GB/s bandwidth, it fits models that required quantization on 24 GB cards at full precision. Akash spot listings carry no platform markup: you pay provider bids directly, with no contracts or reserved-instance minimums.
+          </p>
+        </div>
+
+        <!-- Live price + CTAs -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-2.5">
+            <span class="relative flex size-2 shrink-0">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex size-2 rounded-full bg-green-500"></span>
+            </span>
+            <p class="font-sans text-base font-medium text-foreground">Starting at {data.startingPrice}</p>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <a
+              href={data.consoleUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center rounded-md border border-foreground bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-80"
+            >
+              Deploy on Akash
+            </a>
+            <a
+              href="/pricing/gpus"
+              class="inline-flex items-center rounded-md border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-badgeColor"
+            >
+              View GPU pricing
+            </a>
+          </div>
+
+          <!-- Trust line -->
+          <div class="flex flex-wrap gap-4 text-sm text-para">
+            {
+              ["No long-term contracts", "Pay-as-you-go per block", "Deploy in minutes"].map((t) => (
+                <span class="flex items-center gap-1.5">
+                  <Check className="size-3.5 shrink-0" />
+                  {t}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Key specs ─────────────────────────────────────────────── -->
+      <section class="space-y-8">
+        <h2 class="font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+          Key specifications
+        </h2>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            data.quickSpecs.map((spec) => (
+              <div class="rounded-lg border bg-card px-5 py-4 shadow-sm">
+                <p class="text-xs font-normal text-para">{spec.label}</p>
+                <p class="mt-1 text-base font-semibold text-foreground">{spec.value}</p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ─── Pricing comparison ─────────────────────────────────────── -->
+      <section class="space-y-8">
+        <h2 class="font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+          Provider pricing comparison
+        </h2>
+        <div class="overflow-x-auto rounded-lg border shadow-sm">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b bg-card">
+                <th class="px-4 py-3 text-left text-sm font-medium text-para">Provider</th>
+                <th class="px-4 py-3 text-left text-sm font-medium text-para">Tier</th>
+                <th class="px-4 py-3 text-left text-sm font-medium text-para">$/hr</th>
+                <th class="px-4 py-3 text-left text-sm font-medium text-para">vs Akash</th>
+                <th class="px-4 py-3 text-left text-sm font-medium text-para">Verified</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                data.pricingTable.map((row, i) => (
+                  <tr class={`border-b last:border-0 transition-colors hover:bg-card ${i === 0 ? "bg-card/60" : ""}`}>
+                    <td class="px-4 py-3 font-medium text-foreground">{row.provider}</td>
+                    <td class="px-4 py-3 text-para">{row.tier}</td>
+                    <td class="px-4 py-3 font-medium text-foreground">{row.price}</td>
+                    <td class="px-4 py-3 text-para">{row.vsAkash}</td>
+                    <td class="px-4 py-3 text-para">{row.verified}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="text-sm font-normal text-para">
+          Prices are sourced from public provider pages and updated periodically. Akash prices reflect live marketplace bids.
+        </p>
+      </section>
+
+      <!-- ─── Decision guide ────────────────────────────────────────── -->
+      <section class="space-y-8">
+        <h2 class="font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+          Which GPU should you pick?
+        </h2>
+        <div class="grid gap-5 md:grid-cols-3">
+          {
+            data.decisionCards.map((card, i) => (
+              <a href={card.link.href} class="block h-full">
+                <Card className="group flex h-full cursor-pointer flex-col transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/20">
+                  <CardHeader>
+                    <CardTitle className="text-base font-semibold leading-snug">
+                      {card.heading}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-1 flex-col gap-4">
+                    <ul class="flex flex-col gap-2">
+                      {card.points.map((point) => (
+                        <li class="flex items-start gap-2 text-sm font-normal text-para">
+                          {i === 0
+                            ? <Check className="mt-0.5 size-3.5 shrink-0 text-foreground" />
+                            : <span class="mt-0.5 shrink-0 leading-none">·</span>
+                          }
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                    <div class="mt-auto flex h-9 w-full items-center justify-center gap-1.5 rounded-md border bg-background px-3 text-xs font-medium text-foreground shadow-sm transition-colors group-hover:bg-neutral-200 dark:group-hover:bg-badgeColor">
+                      {card.link.label}
+                      <ChevronRight size={13} className="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ─── Deploy guide ──────────────────────────────────────────── -->
+      <section class="space-y-8">
+        <div class="space-y-3">
+          <h2 class="font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+            Deploy in minutes
+          </h2>
+          <p class="max-w-xl text-base font-normal text-para">
+            Example: run vLLM with Qwen2.5-14B on a single RTX 5090.
+          </p>
+        </div>
+
+        <div class="grid gap-8 lg:grid-cols-2 lg:items-start">
+          <!-- Steps -->
+          <ol class="flex flex-col gap-6">
+            {
+              data.deploySteps.map((step, i) => (
+                <li class="flex items-start gap-4">
+                  <span class="flex size-7 shrink-0 items-center justify-center rounded-full border bg-card text-xs font-semibold text-foreground shadow-sm">
+                    {i + 1}
+                  </span>
+                  <p class="pt-0.5 text-base font-normal leading-relaxed text-para" set:html={step.html} />
+                </li>
+              ))
+            }
+          </ol>
+
+          <GpuCodeBlock code={data.deployYaml} client:load />
+        </div>
+      </section>
+
+      <!-- ─── Full specs ────────────────────────────────────────────── -->
+      <section class="space-y-8">
+        <h2 class="font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+          Full specifications
+        </h2>
+        <div class="overflow-x-auto rounded-lg border shadow-sm">
+          <table class="w-full text-sm">
+            <tbody>
+              {
+                data.fullSpecs.map((spec, i) => (
+                  <tr class={`border-b last:border-0 transition-colors hover:bg-card ${i % 2 === 0 ? "bg-card/40" : ""}`}>
+                    <td class="w-1/2 px-4 py-3 font-normal text-para">{spec.label}</td>
+                    <td class="px-4 py-3 font-medium text-foreground">{spec.value}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ─── Comparisons ───────────────────────────────────────────── -->
+      <section class="space-y-8">
+        <h2 class="font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+          How it compares
+        </h2>
+        <div class="grid gap-5 md:grid-cols-3">
+          {
+            data.comparisons.map((comp) => (
+              <a href={comp.link.href} class="block h-full">
+                <Card className="group flex h-full cursor-pointer flex-col transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/20">
+                  <CardHeader>
+                    <CardTitle className="text-base font-semibold leading-snug">{comp.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-1 flex-col gap-4">
+                    <ul class="flex flex-col gap-2">
+                      {comp.points.map((point) => (
+                        <li class="text-sm font-normal text-para">· {point}</li>
+                      ))}
+                    </ul>
+                    <div class="mt-auto flex h-9 w-full items-center justify-center gap-1.5 rounded-md border bg-background px-3 text-xs font-medium text-foreground shadow-sm transition-colors group-hover:bg-neutral-200 dark:group-hover:bg-badgeColor">
+                      {comp.link.label}
+                      <ChevronRight size={13} className="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ─── Use cases ─────────────────────────────────────────────── -->
+      <section class="space-y-8">
+        <h2 class="font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+          Common use cases
+        </h2>
+        <div class="grid gap-5 sm:grid-cols-2">
+          {
+            data.useCases.map((uc) => (
+              <Card className="flex flex-col gap-0 shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-base font-semibold leading-snug">{uc.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-1 flex-col gap-3">
+                  <CardDescription className="text-sm font-normal leading-relaxed">
+                    {uc.description}
+                  </CardDescription>
+                  <div class="mt-auto flex flex-wrap gap-1.5 pt-3">
+                    {uc.framework.split("·").map((f: string) => (
+                      <span class="rounded-full border border-border bg-background2 px-2.5 py-0.5 text-xs font-medium text-foreground">
+                        {f.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ─── Related GPUs ──────────────────────────────────────────── -->
+      <section class="space-y-8">
+        <h2 class="font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+          Related GPUs
+        </h2>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            data.relatedGpus.map((rel) => (
+              <a href={rel.href} class="block h-full">
+                <Card className="group flex h-full cursor-pointer flex-col transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/20">
+                  <CardContent className="flex flex-1 flex-col gap-4 p-5">
+                    <div class="flex-1 space-y-1">
+                      <p class="text-base font-semibold text-foreground">{rel.name}</p>
+                      <p class="text-sm font-normal text-para">{rel.description}</p>
+                    </div>
+                    <div class="flex h-9 w-full items-center justify-center gap-1.5 rounded-md border bg-background px-3 text-xs font-medium text-foreground shadow-sm transition-colors group-hover:bg-neutral-200 dark:group-hover:bg-badgeColor">
+                      View pricing
+                      <ChevronRight size={13} className="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ─── FAQ ───────────────────────────────────────────────────── -->
+      <section class="flex flex-col items-center gap-8">
+        <h2 class="w-full text-center font-sans text-2xl !font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+          Frequently asked questions
+        </h2>
+        <div class="w-full max-w-2xl">
+          <GpuFaq items={data.faq} client:load />
+        </div>
+      </section>
+
+    </div>
+  </TopMargin>
+</Layout>
